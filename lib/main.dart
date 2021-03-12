@@ -35,7 +35,6 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> itemsData = [];
   List<dynamic> roomsData = Rooms_DATA;
 
-
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -64,101 +63,116 @@ class _MyHomePageState extends State<MyHomePage> {
             backgroundColor: Colors.transparent,
             title: Center(
                 child: Text(
-                    'Devices Grouping',
-                  style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                  ),
-                )
-            ),
-            leading: Icon(
-              Icons.menu,
-              color: Colors.blue,
+              'Devices Grouping',
+              style: TextStyle(
+                color: Colors.blue,
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
+            leading: RawMaterialButton(
+              onPressed: () {},
+              constraints: BoxConstraints.tight(Size(40, 40)),
+              child: Icon(
+                Icons.menu,
+                size: 40,
+                color: Colors.blue,
+              ),
+              shape: CircleBorder(),
             ),
             actions: <Widget>[
-              // IconButton(
-              //   icon: Icon(Icons.search, color: Colors.black),
-              //   onPressed: () {},
-              // ),
-              IconButton(
-                icon: Icon(Icons.person, color: Colors.blue),
-                onPressed: () {},
-              )
+              Container(
+                margin: EdgeInsets.only(right: 10),
+                child: RawMaterialButton(
+                  onPressed: () {},
+                  constraints: BoxConstraints.tight(Size(40, 40)),
+                  elevation: 10.0,
+                  fillColor: Colors.blue,
+                  child: Icon(
+                    Icons.add_rounded,
+                    size: 40,
+                    color: Colors.white,
+                  ),
+                  shape: CircleBorder(),
+                ),
+              ),
             ],
           ),
           body: Container(
             height: size.height,
             child: Column(
               children: <Widget>[
-
                 Expanded(
                   child: ListView.builder(
                       itemCount: roomsData.length,
                       scrollDirection: Axis.horizontal,
                       physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index){
-                      return SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                          child: FittedBox(
-                            fit: BoxFit.fill,
-                            alignment: Alignment.topCenter,
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 150,
-                                  margin: EdgeInsets.only(right: 0),
-                                  height: roomsHeight,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: ExactAssetImage("assets/images/living_room.jpg"),
-                                        fit: BoxFit.cover,
-                                        colorFilter: ColorFilter.mode(
-                                            Colors.black.withOpacity(0.5),
-                                            BlendMode.darken
+                      itemBuilder: (context, index) {
+                        return SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 10),
+                            child: FittedBox(
+                              fit: BoxFit.fill,
+                              alignment: Alignment.topCenter,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                    width: 150,
+                                    margin: EdgeInsets.only(right: 0),
+                                    height: roomsHeight,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: ExactAssetImage(
+                                              "assets/images/${roomsData[index]["image"]}"),
+                                          fit: BoxFit.cover,
+                                          colorFilter: ColorFilter.mode(
+                                              Colors.black.withOpacity(0.5),
+                                              BlendMode.darken),
                                         ),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20.0)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                              color:
+                                                  Colors.black.withAlpha(100),
+                                              blurRadius: 10.0),
+                                        ]),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text(
+                                            roomsData[index]["name"],
+                                            style: TextStyle(
+                                                fontSize: 25,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Text(
+                                            '${roomsData[index]["devices"].toString()} Devices',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.white),
+                                          ),
+                                        ],
                                       ),
-                                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                                      boxShadow: [BoxShadow(
-                                          color: Colors.black.withAlpha(100),
-                                          blurRadius: 10.0),
-                                      ]
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          "Living\nRoom",
-                                          style: TextStyle(fontSize: 25,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          "5 Devices",
-                                          style: TextStyle(fontSize: 16, color: Colors.white),
-                                        ),
-                                      ],
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      }),
                 ),
-
-
-
                 Expanded(
                     child: ListView.builder(
                         controller: controller,
@@ -212,11 +226,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
                 // stops: [0.4, 1.0],
               ),
-              boxShadow: [BoxShadow(
-                  color: Colors.black.withAlpha(100),
-                  blurRadius: 10.0),
-              ]
-          ),
+              boxShadow: [
+                BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
+              ]),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: Row(
@@ -234,7 +246,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             color: Colors.blue,
                           ),
                         ),
-                        SizedBox(height: 5.0,),
+                        SizedBox(
+                          height: 5.0,
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -250,7 +264,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                               shape: CircleBorder(),
                             ),
-                            SizedBox(width: 10.0,),
+                            SizedBox(
+                              width: 10.0,
+                            ),
                             RawMaterialButton(
                               onPressed: () {},
                               constraints: BoxConstraints.tight(
@@ -263,7 +279,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                               shape: CircleBorder(),
                             ),
-                            SizedBox(width: 10.0,),
+                            SizedBox(
+                              width: 10.0,
+                            ),
                             RawMaterialButton(
                               onPressed: () {},
                               constraints: BoxConstraints.tight(
@@ -282,7 +300,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 ),
-
                 Row(
                   // mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -301,13 +318,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-
-  void function(){
-    List<dynamic> list = Rooms_DATA;
-    list.forEach((post) {
-      print(post["name"]);
-      print(post["image"]);
-    });
+  void function() {
+    // print(roomsData[index]);
   }
 
   @override

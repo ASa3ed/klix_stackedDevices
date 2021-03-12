@@ -28,18 +28,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  ScrollController controller = ScrollController();
-  bool closeTopContainer = false;
-  double topContainer = 0;
-
-  List<Widget> itemsData = [];
+  List<dynamic> devicesData = Devices_DATA;
   List<dynamic> roomsData = Rooms_DATA;
 
   @override
   Widget build(BuildContext context) {
+    final double iconSize = 40.0;
     final Size size = MediaQuery.of(context).size;
-    // final double categoryHeight = size.height * 0.40;
-    final double roomsHeight = size.height * 0.40;
+    final double roomsHeight = size.height * 0.4;
 
     return SafeArea(
       child: Container(
@@ -121,8 +117,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 children: <Widget>[
                                   Container(
                                     width: 150,
-                                    margin: EdgeInsets.only(right: 0),
                                     height: roomsHeight,
+                                    margin: EdgeInsets.only(right: 0),
                                     decoration: BoxDecoration(
                                         image: DecorationImage(
                                           image: ExactAssetImage(
@@ -174,148 +170,124 @@ class _MyHomePageState extends State<MyHomePage> {
                       }),
                 ),
                 Expanded(
-                    child: ListView.builder(
-                        controller: controller,
-                        itemCount: itemsData.length,
-                        physics: BouncingScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          double scale = 1.0;
-                          if (topContainer > 0.5) {
-                            scale = index + 0.5 - topContainer;
-                            if (scale < 0) {
-                              scale = 0;
-                            } else if (scale > 1) {
-                              scale = 1;
-                            }
-                          }
-                          return Opacity(
-                            opacity: scale,
-                            child: Transform(
-                              transform: Matrix4.identity()
-                                ..scale(scale, scale),
-                              alignment: Alignment.bottomCenter,
-                              child: itemsData[index],
-                            ),
-                          );
-                        })),
+                  child: ListView.builder(
+                      itemCount: devicesData.length,
+                      scrollDirection: Axis.vertical,
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
+                          scrollDirection: Axis.vertical,
+                          child: Container(
+                              height: 100,
+                              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                                  // color: Colors.blue.shade400,
+                                  gradient: LinearGradient(
+                                    // center: const Alignment(0.7, -0.6),
+                                    // radius: 0.2,
+                                    colors: [
+                                      const Color(0xFFFFFFFF),
+                                      const Color(0xFFC0C0C0),
+                                    ],
+                                    // stops: [0.4, 1.0],
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
+                                  ]),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Text(
+                                              devicesData[index]["name"],
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.blue,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 5.0,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                RawMaterialButton(
+                                                  onPressed: () {},
+                                                  constraints: BoxConstraints.tight(
+                                                      Size(iconSize, iconSize)),
+                                                  elevation: 5.0,
+                                                  fillColor: Colors.white,
+                                                  child: Icon(
+                                                    Icons.arrow_upward,
+                                                    size: iconSize,
+                                                  ),
+                                                  shape: CircleBorder(),
+                                                ),
+                                                SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                RawMaterialButton(
+                                                  onPressed: () {},
+                                                  constraints: BoxConstraints.tight(
+                                                      Size(iconSize, iconSize)),
+                                                  elevation: 5.0,
+                                                  fillColor: Colors.white,
+                                                  child: Icon(
+                                                    Icons.pause,
+                                                    size: iconSize,
+                                                  ),
+                                                  shape: CircleBorder(),
+                                                ),
+                                                SizedBox(
+                                                  width: 10.0,
+                                                ),
+                                                RawMaterialButton(
+                                                  onPressed: () {},
+                                                  constraints: BoxConstraints.tight(
+                                                      Size(iconSize, iconSize)),
+                                                  elevation: 5.0,
+                                                  fillColor: Colors.white,
+                                                  child: Icon(
+                                                    Icons.arrow_downward,
+                                                    size: iconSize,
+                                                  ),
+                                                  shape: CircleBorder(),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      // mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Image.asset(
+                                          "assets/images/${devicesData[index]["image"]}",
+                                          height: double.infinity,
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              )),
+                        );
+                      }),
+                ),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  void getPostsData() {
-    const double _iconSize = 40.0;
-    List<dynamic> _responseList = Devices_DATA;
-    List<Widget> listItems = [];
-    _responseList.forEach((post) {
-      listItems.add(Container(
-          height: 100,
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              // color: Colors.blue.shade400,
-              gradient: LinearGradient(
-                // center: const Alignment(0.7, -0.6),
-                // radius: 0.2,
-                colors: [
-                  const Color(0xFFFFFFFF),
-                  const Color(0xFFC0C0C0),
-                ],
-                // stops: [0.4, 1.0],
-              ),
-              boxShadow: [
-                BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
-              ]),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Row(
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          post["name"],
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 5.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            RawMaterialButton(
-                              onPressed: () {},
-                              constraints: BoxConstraints.tight(
-                                  Size(_iconSize, _iconSize)),
-                              elevation: 5.0,
-                              fillColor: Colors.white,
-                              child: Icon(
-                                Icons.arrow_upward,
-                                size: _iconSize,
-                              ),
-                              shape: CircleBorder(),
-                            ),
-                            SizedBox(
-                              width: 10.0,
-                            ),
-                            RawMaterialButton(
-                              onPressed: () {},
-                              constraints: BoxConstraints.tight(
-                                  Size(_iconSize, _iconSize)),
-                              elevation: 5.0,
-                              fillColor: Colors.white,
-                              child: Icon(
-                                Icons.pause,
-                                size: _iconSize,
-                              ),
-                              shape: CircleBorder(),
-                            ),
-                            SizedBox(
-                              width: 10.0,
-                            ),
-                            RawMaterialButton(
-                              onPressed: () {},
-                              constraints: BoxConstraints.tight(
-                                  Size(_iconSize, _iconSize)),
-                              elevation: 5.0,
-                              fillColor: Colors.white,
-                              child: Icon(
-                                Icons.arrow_downward,
-                                size: _iconSize,
-                              ),
-                              shape: CircleBorder(),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  // mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Image.asset(
-                      "assets/images/${post["image"]}",
-                      height: double.infinity,
-                    ),
-                  ],
-                )
-              ],
-            ),
-          )));
-    });
-    setState(() {
-      itemsData = listItems;
-    });
   }
 
   void function() {
@@ -325,7 +297,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    getPostsData();
+    // getPostsData();
     function();
     /** This is to Disappear Room Cards by scrolling **/
     // controller.addListener(() {

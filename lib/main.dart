@@ -28,9 +28,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<dynamic> newDevices = Devices_DATA;
-  List<dynamic> devicesData = Devices_DATA;
-  List<dynamic> roomsData = Rooms_DATA;
+  List newDevices = Devices_DATA;
+  List devicesData = Devices_DATA;
+  List roomsData = Rooms_DATA;
 
 
   bool accepted = false;
@@ -162,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 height: 10,
                                               ),
                                               Text(
-                                                '${roomsData[roomsindex]["devices"]
+                                                '${roomsData[roomsindex]["NoOfDevices"]
                                                     .toString()} Devices',
                                                 style: TextStyle(
                                                     fontSize: 16,
@@ -170,8 +170,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ),
                                               SizedBox(height: 10,),
                                               Container(
-                                                child: accepted==true?
-                                                  Icon(Icons.device_hub)
+                                                child: roomsData[roomsindex]["devices"] != null?
+                                                  Icon(Icons.device_hub,color: Colors.white,)
                                                 :Container(),
                                               ),
                                             ],
@@ -192,10 +192,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                 accepted = true;
 
                                 devicesData[devicesindex]["room"] = roomsData[roomsindex]["name"];
+                                roomsData[roomsindex]["devices"] = devicesData[devicesindex]["name"];
                                 newDevices.removeAt(devicesindex);
 
                                 print("devicesindex= $devicesindex,roomsindex= $roomsindex");
-                                print(devicesData);
+                                print(roomsData);
 
                                 // newDevices.remove([index]);
                               });

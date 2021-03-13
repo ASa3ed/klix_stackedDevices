@@ -1,26 +1,31 @@
 List<Map> Rooms_DATA = [
   {
     "name":"Living Room",
-    "devices":5,
+    "NoOfDevices":5,
+    "devices": null,
     "image":"living_room.jpg"
   },{
     "name":"Bedroom",
-    "devices":9,
+    "NoOfDevices":9,
+    "devices": null,
     "image":"bedroom.jpg"
   },
   {
     "name":"Bathroom",
-    "devices":6,
+    "NoOfDevices":6,
+    "devices": null,
     "image":"bathroom.jpg"
   },
   {
     "name":"Kitchen",
-    "devices":3,
+    "NoOfDevices":3,
+    "devices": null,
     "image":"kitchen_x.jpg"
   },
   {
     "name":"Room",
-    "devices":0,
+    "NoOfDevices":0,
+    "devices": null,
     "image":"kitchen.jpg"
   }
 ];

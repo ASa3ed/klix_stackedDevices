@@ -1,4 +1,4 @@
-const Rooms_DATA = [
+List<Map> Rooms_DATA = [
   {
     "name":"Living Room",
     "devices":5,

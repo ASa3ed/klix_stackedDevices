@@ -1,4 +1,4 @@
-List<Map<String,String>> Devices_DATA = [
+List<Map> Devices_DATA = [
   {
     "name":"Shutter #1",
     "MAC":"2955ef5d9c0a",

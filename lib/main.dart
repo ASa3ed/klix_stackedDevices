@@ -28,15 +28,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  List<dynamic> newDevices = Devices_DATA;
   List<dynamic> devicesData = Devices_DATA;
   List<dynamic> roomsData = Rooms_DATA;
 
+
+  bool accepted = false;
+  int devicesindex;
+  int roomsindex;
+
   @override
   Widget build(BuildContext context) {
-    final double iconSize = 40.0;
+    final double iconSize = 35.0;
     final Size size = MediaQuery.of(context).size;
     final double roomsHeight = size.height * 0.4;
 
+    
+    
     return SafeArea(
       child: Container(
         decoration: BoxDecoration(
@@ -59,12 +67,12 @@ class _MyHomePageState extends State<MyHomePage> {
             backgroundColor: Colors.transparent,
             title: Center(
                 child: Text(
-              'Devices Grouping',
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-              ),
+                  'Devices Grouping',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
             )),
             leading: RawMaterialButton(
               onPressed: () {},
@@ -78,11 +86,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             actions: <Widget>[
               Container(
-                margin: EdgeInsets.only(right: 10),
+                margin: EdgeInsets.only(right: 10,top: 5),
                 child: RawMaterialButton(
                   onPressed: () {},
                   constraints: BoxConstraints.tight(Size(40, 40)),
-                  elevation: 10.0,
+                  elevation: 5.0,
                   fillColor: Colors.blue,
                   child: Icon(
                     Icons.add_rounded,
@@ -103,83 +111,110 @@ class _MyHomePageState extends State<MyHomePage> {
                       itemCount: roomsData.length,
                       scrollDirection: Axis.horizontal,
                       physics: BouncingScrollPhysics(),
-                      itemBuilder: (context, index) {
+                      itemBuilder: (context, roomsindex) {
                         return SingleChildScrollView(
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 15, horizontal: 10),
-                            child: FittedBox(
-                              fit: BoxFit.fill,
-                              alignment: Alignment.topCenter,
-                              child: Row(
-                                children: <Widget>[
-                                  Container(
-                                    width: 150,
-                                    height: roomsHeight,
-                                    margin: EdgeInsets.only(right: 0),
-                                    decoration: BoxDecoration(
-                                        image: DecorationImage(
-                                          image: ExactAssetImage(
-                                              "assets/images/${roomsData[index]["image"]}"),
-                                          fit: BoxFit.cover,
-                                          colorFilter: ColorFilter.mode(
-                                              Colors.black.withOpacity(0.5),
-                                              BlendMode.darken),
-                                        ),
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(20.0)),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              color:
+                          child: DragTarget(
+                            builder: (context, data, rejectedData) {
+                              return Container(
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 10),
+                                child: FittedBox(
+                                  fit: BoxFit.fill,
+                                  alignment: Alignment.topCenter,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        width: 150,
+                                        height: roomsHeight,
+                                        margin: EdgeInsets.only(right: 0),
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                              image: ExactAssetImage(
+                                                  "assets/images/${roomsData[roomsindex]["image"]}"),
+                                              fit: BoxFit.cover,
+                                              colorFilter: ColorFilter.mode(
+                                                  Colors.black.withOpacity(0.5),
+                                                  BlendMode.darken),
+                                            ),
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20.0)),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                  color:
                                                   Colors.black.withAlpha(100),
-                                              blurRadius: 10.0),
-                                        ]),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Column(
-                                        crossAxisAlignment:
+                                                  blurRadius: 10.0),
+                                            ]),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Column(
+                                            crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(
-                                            roomsData[index]["name"],
-                                            style: TextStyle(
-                                                fontSize: 25,
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
+                                            children: <Widget>[
+                                              Text(
+                                                roomsData[roomsindex]["name"],
+                                                style: TextStyle(
+                                                    fontSize: 25,
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight
+                                                        .bold),
+                                              ),
+                                              SizedBox(
+                                                height: 10,
+                                              ),
+                                              Text(
+                                                '${roomsData[roomsindex]["devices"]
+                                                    .toString()} Devices',
+                                                style: TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.white),
+                                              ),
+                                              SizedBox(height: 10,),
+                                              Container(
+                                                child: accepted==true?
+                                                  Icon(Icons.device_hub)
+                                                :Container(),
+                                              ),
+                                            ],
                                           ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                            '${roomsData[index]["devices"].toString()} Devices',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
+                              );
+                            },
+                            onWillAccept: (data){
+                              return true;
+                            },
+                            onAccept: (data){
+                              setState(() {
+                                /** refresh List of devices and Rooms **/
+                                accepted = true;
+
+                                devicesData[devicesindex]["room"] = roomsData[roomsindex]["name"];
+                                newDevices.removeAt(devicesindex);
+
+                                print("devicesindex= $devicesindex,roomsindex= $roomsindex");
+                                print(devicesData);
+
+                                // newDevices.remove([index]);
+                              });
+                            },
                           ),
                         );
                       }),
                 ),
                 Expanded(
                   child: ListView.builder(
-                      itemCount: devicesData.length,
+                      itemCount: newDevices.length,
                       scrollDirection: Axis.vertical,
                       physics: BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         return SingleChildScrollView(
-                          physics: BouncingScrollPhysics(),
-                          scrollDirection: Axis.vertical,
                           child: Draggable(
                             child: Container(
-                                height: 100,
-                                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                height: 90,
+                                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                                     // color: Colors.blue.shade400,
@@ -196,91 +231,82 @@ class _MyHomePageState extends State<MyHomePage> {
                                       BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
                                     ]),
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
-                                      Row(
+                                      Column(
                                         children: [
-                                          Column(
-                                            children: [
-                                              Text(
-                                                devicesData[index]["name"],
-                                                style: const TextStyle(
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.blue,
+                                          Text(
+                                            newDevices[index]["name"],
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 5.0,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              RawMaterialButton(
+                                                onPressed: () {},
+                                                constraints: BoxConstraints.tight(
+                                                    Size(iconSize, iconSize)),
+                                                elevation: 5.0,
+                                                fillColor: Colors.white,
+                                                child: Icon(
+                                                  Icons.arrow_upward,
+                                                  size: iconSize,
                                                 ),
+                                                shape: CircleBorder(),
                                               ),
                                               SizedBox(
-                                                height: 5.0,
+                                                width: 10.0,
                                               ),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: <Widget>[
-                                                  RawMaterialButton(
-                                                    onPressed: () {},
-                                                    constraints: BoxConstraints.tight(
-                                                        Size(iconSize, iconSize)),
-                                                    elevation: 5.0,
-                                                    fillColor: Colors.white,
-                                                    child: Icon(
-                                                      Icons.arrow_upward,
-                                                      size: iconSize,
-                                                    ),
-                                                    shape: CircleBorder(),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10.0,
-                                                  ),
-                                                  RawMaterialButton(
-                                                    onPressed: () {},
-                                                    constraints: BoxConstraints.tight(
-                                                        Size(iconSize, iconSize)),
-                                                    elevation: 5.0,
-                                                    fillColor: Colors.white,
-                                                    child: Icon(
-                                                      Icons.pause,
-                                                      size: iconSize,
-                                                    ),
-                                                    shape: CircleBorder(),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10.0,
-                                                  ),
-                                                  RawMaterialButton(
-                                                    onPressed: () {},
-                                                    constraints: BoxConstraints.tight(
-                                                        Size(iconSize, iconSize)),
-                                                    elevation: 5.0,
-                                                    fillColor: Colors.white,
-                                                    child: Icon(
-                                                      Icons.arrow_downward,
-                                                      size: iconSize,
-                                                    ),
-                                                    shape: CircleBorder(),
-                                                  ),
-                                                ],
+                                              RawMaterialButton(
+                                                onPressed: () {},
+                                                constraints: BoxConstraints.tight(
+                                                    Size(iconSize, iconSize)),
+                                                elevation: 5.0,
+                                                fillColor: Colors.white,
+                                                child: Icon(
+                                                  Icons.pause,
+                                                  size: iconSize,
+                                                ),
+                                                shape: CircleBorder(),
+                                              ),
+                                              SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              RawMaterialButton(
+                                                onPressed: () {},
+                                                constraints: BoxConstraints.tight(
+                                                    Size(iconSize, iconSize)),
+                                                elevation: 5.0,
+                                                fillColor: Colors.white,
+                                                child: Icon(
+                                                  Icons.arrow_downward,
+                                                  size: iconSize,
+                                                ),
+                                                shape: CircleBorder(),
                                               ),
                                             ],
                                           ),
                                         ],
                                       ),
-                                      Row(
-                                        // mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          Image.asset(
-                                            "assets/images/${devicesData[index]["image"]}",
-                                            height: double.infinity,
-                                          ),
-                                        ],
+                                      Image.asset(
+                                        "assets/images/${newDevices[index]["image"]}",
+                                        height: double.infinity,
                                       )
                                     ],
                                   ),
                                 )),
                             feedback: Container(
-                                height: 100,
-                                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                height: 90,
+                                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                                     // color: Colors.blue.shade400,
@@ -297,7 +323,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       BoxShadow(color: Colors.black.withAlpha(100), blurRadius: 10.0),
                                     ]),
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: <Widget>[
@@ -306,7 +332,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                           Column(
                                             children: [
                                               Text(
-                                                devicesData[index]["name"],
+                                                newDevices[index]["name"],
                                                 style: const TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.bold,
@@ -371,7 +397,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         // mainAxisAlignment: MainAxisAlignment.end,
                                         children: [
                                           Image.asset(
-                                            "assets/images/${devicesData[index]["image"]}",
+                                            "assets/images/${newDevices[index]["image"]}",
                                             height: double.infinity,
                                           ),
                                         ],
@@ -380,6 +406,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   ),
                                 )),
                             childWhenDragging: Container(),
+                            onDragStarted: (){
+                              devicesindex = index;
+                            },
                           ),
                         );
                       }),
@@ -392,15 +421,15 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void function() {
-    // print(roomsData[index]);
+  void function(@required int index) {
+    devicesindex = index;
   }
 
   @override
   void initState() {
     super.initState();
     // getPostsData();
-    function();
+    function;
     /** This is to Disappear Room Cards by scrolling **/
     // controller.addListener(() {
     //
